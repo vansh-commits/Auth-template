@@ -7,7 +7,7 @@ export default function SignInButton() {
 
     if (status === "loading") return <button disabled>...</button>;
     if(session){
-        redirect("/dashboard"); // Redirect to dashboard if already signed in
+        redirect("/dashboard"); 
     }
 
     return (
