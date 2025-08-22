@@ -10,6 +10,9 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
             // (optional) profile(p) { return { id: p.sub, email: p.email, name: p.name, image: p.picture } }
         })
     ],
+    pages : {
+        error : "/auth/error",
+    },
     session: { strategy: "jwt" },
     callbacks: {
         async jwt({ token, account, profile }) {
