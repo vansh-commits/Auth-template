@@ -1,29 +1,31 @@
 // app/api/auth/[...nextauth]/route.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-export const { handlers: { GET, POST }, auth } = NextAuth({
+const handler = NextAuth({
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            // (optional) profile(p) { return { id: p.sub, email: p.email, name: p.name, image: p.picture } }
         })
     ],
-    pages : {
-        error : "/auth/error",
+    pages: {
+        error: "/auth/error"
     },
-    session: { strategy: "jwt" },
+    session: { 
+        strategy: "jwt",
+    },
     callbacks: {
         async jwt({ token, account, profile }) {
             // First sign-in: copy safe fields from Google
             if (account && profile) {
                 try {
-                    const res = await fetch(`${process.env.API_BASE}/internal/sso-sync`, {
+                    const res = await fetch(`${process.env.API_BASE}/auth/internal/sso-sync`, {
                         method: "POST",
                         headers: {
                             "content-type": "application/json",
-                            "x-internal-token": process.env.INTERNAL_SYNC_TOKEN!,
+                            "x-internal-token": process.env.INTERNAL_SYNC_TOKEN!
                         },
                         body: JSON.stringify({
                             provider: account.provider,
@@ -36,7 +38,9 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
                     });
 
                     if (!res.ok) {
-                        throw new Error(`Backend sync failed: ${res.status}`);
+                        const errorText = await res.text();
+                        console.error(`Backend sync failed: ${res.status} - ${errorText}`);
+                        throw new Error(`Backend sync failed: ${res.status} - ${errorText}`);
                     }
 
                     const data = await res.json().catch(() => ({}));
@@ -61,8 +65,7 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
                 }
             }
             return token;
-        }
-        ,
+        },
         async session({ session, token }) {
             // What the client can see
             (session.user as any).id = token.sub as string;
@@ -71,3 +74,5 @@ export const { handlers: { GET, POST }, auth } = NextAuth({
     },
     secret: process.env.NEXTAUTH_SECRET
 });
+
+export const { GET, POST } = handler.handlers;

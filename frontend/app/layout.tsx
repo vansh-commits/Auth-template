@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 
-
 export const metadata: Metadata = {
-  title: "Auth Template",
-  description: "Create a new Next.js app with authentication",
+  title: "People Directory",
+  description: "A modern people directory with authentication",
 };
 
 export default function RootLayout({
@@ -16,9 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="font-mono">
         <SessionProvider>
-        {children}
+          {children}
         </SessionProvider>
       </body>
     </html>
