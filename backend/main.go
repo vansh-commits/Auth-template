@@ -2,21 +2,19 @@
 package main
 
 import (
+	"backend/database"
 	"backend/routes"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 )
 
 func main() {
+	database.Connect()
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("No .env file found or couldn't load it")
-	}
 
 	app := fiber.New()
 
