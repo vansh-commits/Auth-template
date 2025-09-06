@@ -11,12 +11,10 @@ A modern, dark-themed people directory application built with Next.js, featuring
 - 🚀 Fast navigation with Next.js App Router
 
 ## Setup
-
 1. Install dependencies:
 ```bash
 npm install
 ```
-
 2. Create a `.env.local` file in the frontend directory:
 ```env
 BACKEND_URL=http://localhost:8080
